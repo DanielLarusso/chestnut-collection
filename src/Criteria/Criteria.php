@@ -16,18 +16,14 @@ class Criteria implements CriteriaInterface
     private ?ExpressionBuilder $expressionBuilder = null;
 
     public function __construct(
-        ExpressionInterface $expression = null,
-        ?array $orderings = null, 
-        ?int $firstResult = null, 
-        ?int $maxResults = null
-    )
-    {
-        $this->expression = $expression;
-        $this->orderings = $orderings;
-        $this->firstResult = $firstResult;
-        $this->maxResults = $maxResults;
+        private ?ExpressionInterface $expression = null,
+        private ?array $orderings = null,
+        private ?int $firstResult = null,
+        private ?int $maxResults = null
+    ) {
+
     }
-    
+
     public static function create(): static
     {
         return new static();
@@ -54,7 +50,7 @@ class Criteria implements CriteriaInterface
             return $this->where($expression);
         }
 
-        $this->expression = new CompositeExpression(CompositeType::AND, [$this->expression, $expression]);
+        $this->expression = new CompositeExpression(CompositeType::AND, $this->expression, $expression);
 
         return $this;
     }

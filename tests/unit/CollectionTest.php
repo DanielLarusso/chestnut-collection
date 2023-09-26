@@ -13,7 +13,7 @@ class CollectionTest extends TestCase
     public function testCollection(): void
     {
         $result = new Collection();
-        
+
         $this->assertInstanceOf(CollectionInterface::class, $result);
     }
 }

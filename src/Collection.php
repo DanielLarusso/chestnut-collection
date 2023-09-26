@@ -27,6 +27,13 @@ class Collection extends AbstractCollection
         return $this->elementAt($offset);
     }
 
+    public function offsetSet(int $offset, mixed $value): static
+    {
+        $this->items[$offset] = $value;
+
+        return $this;
+    }
+
     public function offsetUnset(int $offset): static
     {
         $this->removeAt($offset);
@@ -67,10 +74,10 @@ class Collection extends AbstractCollection
         $current = $this->count() - 1;
 
         for (; $current >= $index; --$current) {
-            $this->items[$current + 1] = $this->items[$current];
+            $this->offsetSet($current + 1, $this->offsetGet($current));
         }
 
-        $this->items[$index] = $item;
+        $this->offsetSet($index, $item);
 
         return $this;
     }
@@ -99,7 +106,7 @@ class Collection extends AbstractCollection
         return $this;
     }
 
-    public function allIndexesOf(mixed $item)
+    public function allIndexesOf(mixed $item): array
     {
         return $this->getAllIndexes($item, $this->items);
     }
@@ -136,7 +143,7 @@ class Collection extends AbstractCollection
         return $result;
     }
 
-    protected function getAllIndexes(mixed $item, array $array)
+    protected function getAllIndexes(mixed $item, array $array): array
     {
         if (gettype($item) != 'object') {
             $result = array_keys($array, $item, true);
@@ -144,8 +151,10 @@ class Collection extends AbstractCollection
             $result = array_keys($array, $item, false);
         }
 
-        if (!is_array($result))
+        if (!is_array($result)) {
             $result = array();
+        }
+
         return $result;
     }
 
